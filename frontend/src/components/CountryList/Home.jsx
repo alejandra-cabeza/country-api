@@ -12,14 +12,6 @@ function Home() {
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-    const handleCheckboxChange = (country) => {
-        setSelectedCountries((prevSelected) =>
-            prevSelected.some((c) => c.code === country.code)
-                ? prevSelected.filter((c) => c.code !== country.code)
-                : [...prevSelected, country]
-        );
-    };
-
     const params = useMemo(() => {
         const baseParams = {
             page: currentPage,
@@ -36,6 +28,14 @@ function Home() {
 
     const { data: fetchedCountries, loading, error } = useFetch('/api/countries', params);
     const totalPages = fetchedCountries?.meta?.last_page;
+
+    const handleCheckboxChange = (country) => {
+        setSelectedCountries((prevSelected) =>
+            prevSelected.some((c) => c.code === country.code)
+                ? prevSelected.filter((c) => c.code !== country.code)
+                : [...prevSelected, country]
+        );
+    };
 
     const handleResetClick = () => {
         setSelectedCountries([]);
