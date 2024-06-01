@@ -6,8 +6,8 @@ cp .env.example .env
 # Install backend dependencies
 composer install
 
-# Run database migrations
-php artisan migrate
+# Drop all tables and run migrations
+php artisan migrate:fresh
 
 # Run database seeders
 php artisan db:seed

@@ -29,7 +29,7 @@ class CountryController extends Controller
         $query = Country::query();
 
         if ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'ilike', '%' . $search . '%');
         }
 
         $countries = $query->paginate($perPage);

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 function TableRow({ country: { code, name }, isSelected, handleCheckboxChange, className, type, showDivider }) {
-    console.log('✌️showDivider --->', showDivider);
     return (
         <tr key={code} className={classNames("hover:bg-secondary-extraLight", className, showDivider ? 'border-t-8 border-secondary-light' : 'border-t')}>
             <td className="p-2 w-1/6 border-r">

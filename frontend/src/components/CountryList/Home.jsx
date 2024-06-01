@@ -26,7 +26,7 @@ function Home() {
     }, [currentPage, debouncedSearchTerm, entriesPerPage]);
 
 
-    const { data: fetchedCountries, loading, error } = useFetch('/api/countries', params);
+    const { data: fetchedCountries, loading, error } = useFetch(`http://localhost:8000/api/countries`, params);
     const totalPages = fetchedCountries?.meta?.last_page;
 
     const handleCheckboxChange = (country) => {
@@ -58,6 +58,44 @@ function Home() {
         alert(selectedCountryNames.join(', '));
     };
 
+
+    const renderContent = () => {
+        if (loading) {
+          return <div>Loading...</div>;
+        }
+      
+        if (error) {
+          return (
+            <div className='bg-error rounded p-2 m-20 text-white'>
+              Error: {error.response?.data?.message || 'An error occurred'}
+            </div>
+          );
+        }
+      
+        if (fetchedCountries?.data.length) {
+          return (
+            <>
+              <Table
+                fetchedCountries={fetchedCountries?.data}
+                selectedCountries={selectedCountries}
+                handleCheckboxChange={handleCheckboxChange}
+              />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                entriesPerPage={entriesPerPage}
+                handleEntriesChange={handleEntriesChange}
+                setCurrentPage={setCurrentPage}
+                onButtonClick={handleButtonClick}
+              />
+            </>
+          );
+        }
+      
+        return <div className='text-xl m-12'>No countries found</div>;
+      };
+
+
     return (
         <div className='block w-full md:w-3/4 mx-auto'>
             <h1 className='text-2xl font-bold mb-8'>
@@ -70,31 +108,7 @@ function Home() {
                 selectedCountries={selectedCountries}
                 onSearchTermChange={handleSearchTermChange}
             />
-            {fetchedCountries?.data.length ? (
-                <>
-                    <Table
-                        fetchedCountries={fetchedCountries?.data}
-                        selectedCountries={selectedCountries}
-                        handleCheckboxChange={handleCheckboxChange}
-                    />
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        entriesPerPage={entriesPerPage}
-                        handleEntriesChange={handleEntriesChange}
-                        setCurrentPage={setCurrentPage}
-                        onButtonClick={handleButtonClick}
-                    />
-                </>
-            ) : (
-                <div className='text-xl m-12'>No countries found</div>
-            )}
-            {loading && <div>Loading...</div>}
-            {error && (
-                <div className='bg-error rounded p-2 m-20 text-white'>
-                    Error: {error.response?.data?.message || 'An error occurred'}
-                </div>
-            )}
+            {renderContent()}
         </div>
     );
 }
